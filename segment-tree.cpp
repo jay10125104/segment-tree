@@ -115,6 +115,10 @@ struct Segtree
     }
     void build(int node, int start, int end, vector<int> &tree)
     {
+        //start with node 1 ->> call for  start and end.
+        // if start and end are equal then we have a single node;
+        //therefore tree[node] = v[start];
+        //else we call for left->mid; and mid+1 -> right;
         if (start == end)
         {
             tree[node] = v[start];
@@ -125,28 +129,36 @@ struct Segtree
         int right = 2 * node + 1;
         build(left, start, mid, tree);
         build(right, mid + 1, end, tree);
-        tree[node] = tree[left] +  tree[right];
+        tree[node] = max(tree[left],tree[right]);
     }
     int query(vector<int> &tree, int node, int l, int r, int start, int end)
     {
+        // if end < startidx of query or start>endidx of query
+        //return -1;
         if (end < l || start > r)
         {
-            return 0;
+            return -1;
         }
+        //if start==end
+        //retrun tree[node];
         if (start == end)
         {
             return tree[node];
         }
+        // if start and end in middle 
+        //return tree[node];
         else if (start >= l && end <= r)
         {
             return tree[node];
         }
         else
         {
+            //call for start->mid with node->number 2*node;
+            // mid+1->end; with node number -> 2*node+1;
             int mid = (start + end) / 2;
             int left = query(tree, node * 2, l, r, start, mid);
             int right = query(tree, node * 2 + 1, l, r, mid + 1, end);
-            return left+right;
+            return max(left,right); // maxof(left,right);
         }
     }
 };
