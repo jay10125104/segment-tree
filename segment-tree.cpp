@@ -57,6 +57,22 @@ struct Segtree
             return max(left,right); // maxof(left,right);
         }
     }
+    void update(int node, int start, int end, int idx, int val){
+        if(start==end){
+            tree[node]=val;
+            return;
+        }
+        int mid = (start+end)/2;
+        if(idx<=mid){
+            update(2*node,start,mid,idx,val);
+        }
+        else{
+            update(2*node+1,mid+1,end,idx,val);
+        }
+        int left = 2 * node;
+        int right = 2 * node + 1;
+        tree[node] = max(tree[left],tree[right]);
+    }
 };
 // return 0;
 int main()
